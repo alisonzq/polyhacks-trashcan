@@ -20,7 +20,7 @@ async def main():
                 print("Received:", line)
                 if line == "record":
                     await open_camera()
-                    trash_category = await upload_file("trash.jpg")
+                    trash_category = await upload_to_vision("trash.jpg")
                     print(trash_category)
                     ser.write(trash_category.encode())
      
@@ -30,7 +30,7 @@ async def main():
 
 
 #@app.post("/upload/")
-async def upload_file(filepath):
+async def upload_to_vision(filepath):
     try:
         with io.open(filepath, 'rb') as image_file:
             content = image_file.read()
@@ -48,18 +48,20 @@ async def upload_file(filepath):
         return type_of_garbage
     
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail="Error in upload")
     
 
 async def classify_with_gpt(labels: list) -> str:
     try:
-        input = f"Here is a description of an object: {labels}. With this list, classify to what category this object belongs to between these types of garbage: compost, trash, metal can, electronic, plastic. Do not invent a category, classify the object to one of the types of garbage I listed. If there are body parts in the description, ignore. Your answer should simply be the category you classified this object to, all in lowercase."
+        input = f"Here is a description of an object: {labels}. With this list, classify to what category this object belongs to between these types of garbage: compost, trash, metal can, electronic, plastic. Do not invent a category, classify the object to one of the types of garbage I listed. If one of the words in the element of a list corresponds to a category, classify it as the object as this category. If there are body parts in the description, ignore. Your answer should simply be one word which is the category you classified this object to, all in lowercase."
         print(input)
         gpt_response = openAI_client.chat.completions.create(
             model="gpt-3.5-turbo",
+            temperature=0.3,
             messages=[{"role": "system", "content": input}],
         )
-        print(gpt_response)
+        print("GPT Answer: ", gpt_response)
         return gpt_response.choices[0].message.content
 
     except Exception as e:

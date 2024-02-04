@@ -41,7 +41,6 @@ void loop() {
 
 
   if(capturing && receivedCategory) {
-    Serial.println("captured");
     if (garbageType == "trash" || garbageType == "Trash"){
       trash();
 
@@ -69,8 +68,7 @@ void loop() {
 }
 
 void trash() {
-  Serial.print("Received trash");
-  Serial.println(distance);
+  Serial.println("Received trash");
   delay(1000);
   servo.write(0);
   delay(2000);
@@ -84,11 +82,10 @@ void trash() {
 }
 
 void metalCan() {
-  Serial.print("Received metal can");
-  Serial.println(distance);
+  Serial.println("Received metal can");
   delay(1000);
   servo.write(0);
-  delay(1000);
+  delay(2000);
   servo.write(180);
   servo2.write(50);
   delay(1000);
@@ -97,11 +94,10 @@ void metalCan() {
 }
 
 void electronic() {
-  Serial.print("Received electronic");
-  Serial.println(distance);
+  Serial.println("Received electronic");
   delay(1000);
-  servo.write(0);
-  delay(666);
+  servo.write(40);
+  delay(1000);
   servo.write(180);
   servo2.write(50);
   delay(1000);
@@ -110,11 +106,10 @@ void electronic() {
 }
 
 void compost() {
-  Serial.print("Received compost");
-  Serial.println(distance);
+  Serial.println("Received compost");
   delay(1000);
-  servo.write(0);
-  delay(333);
+  servo.write(70);
+  delay(1000);
   servo.write(180);
   servo2.write(50);
   delay(1000);
@@ -123,8 +118,7 @@ void compost() {
 }
 
 void plastic() {
-  Serial.print("Received plastic");
-  Serial.println(distance);
+  Serial.println("Received plastic");
   delay(1000);
   servo2.write(50);
   delay(1000);
